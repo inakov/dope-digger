@@ -1,0 +1,180 @@
+/*** DEFAULT STYLES ***/
+html, body {
+	height: 100%;
+	margin: 0px;
+}
+
+.container {
+	 min-height: 100%;
+	height:auto !important; /* cross-browser */
+	height: 100%; /* cross-browser */
+}
+
+body {
+	height: 100%;
+}
+.hidden {
+	display: none;
+}
+
+.active-room {
+	color: green;
+}
+
+/*** App styles ***/
+.user-profile-container {
+	background-color: #403B38;
+	border-bottom: 8px solid #fed136;
+}
+
+.user-info {
+	font-size: 13px;
+	color: #fff;
+	margin: 0;
+}
+.pager li>a {
+	font-size: 20px;
+	background-color: transparent;
+	border: none;
+}
+
+.pager li>a:hover,
+.pager li>a:visited {
+	text-decoration: none;
+	background-color: transparent;
+}
+
+.user-profile-section {
+	background-image: none;
+}
+
+.user-image {
+	display: inline-block;
+	margin-top: 20px;
+	/*border: 2px solid #fff;*/
+}
+
+.topics-list {
+	/*height: 525px;
+	overflow-y: scroll;*/
+	list-style-type: none;
+	padding-bottom: 30px;
+}
+
+.topics-list li {
+	margin-left: 20px;
+	margin-right: 20px;
+	border-bottom: 1px solid #403B38;
+	cursor: pointer;
+	font-size: 18px;
+	padding: 15px;
+}
+
+.topic-holder {
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
+	overflow: hidden;
+}
+
+.join-btn,
+.join-btn:hover {
+	text-decoration: none;
+	font-size: 18px;
+	color: #26B756;
+}
+
+.leave-btn,
+.leave-btn:hover {
+	text-decoration: none;
+	font-size: 18px;
+	color: #F86859;
+}
+
+.edit-room-btn {
+	font-size: 18px;
+	color: #fed136;
+}
+
+.add-new-room-btn {
+	padding: 15px;
+	font-size: 18px;
+	cursor: pointer;
+	color: #f86859;
+}
+
+.fa-group:before, .fa-users:before {
+	margin-right: 10px;
+}
+
+.room-topic {
+	/*background-color: rgba(255,255,255, 0.8);*/
+	color: #403B38;
+	text-align: center;
+	font-size: 25px;
+	padding: 50px;
+	/*border-bottom: 1px solid #337180;*/
+}
+
+/*.current-room {
+	background-image: url(../img/theme.jpg);
+	background-repeat: none;
+	background-attachment: scroll;
+	background-position: center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+	-o-background-size: cover;
+	text-align: center;
+}*/
+
+.msg-container {
+	/*background-color: rgba(255,255,255, 0.5);*/
+	max-height: 820px;
+	overflow-y: scroll;
+}
+
+.msg-list {
+	/*background-color: rgba(255,255,255, 0.5);*/
+	list-style-type: none;
+}
+
+.form-control:focus {
+	border-color: #fed136;
+}
+
+.chat-room-msg {
+	padding: 15px;
+	background-color: rgba(255,255,255, 0.5);
+	border-bottom: 1px solid;
+}
+
+.active-title {
+	padding: 50px;
+}
+
+.online-users-list {
+	list-style-type: none;
+}
+
+.online-users-list li {
+	/*border-bottom: 1px solid;*/
+	padding: 10px 20px;
+}
+
+.online-user-name {
+	margin-top: 8px;
+}
+
+.users-right-sidebar {
+	background-image: url(../img/portfolio/roundicons-free.png);
+	background-repeat: none;
+	background-attachment: scroll;
+	background-position: center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	background-size: cover;
+	-o-background-size: cover;
+	text-align: center;
+}
