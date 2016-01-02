@@ -6,7 +6,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.FlowGraph.Implicits._
 import akka.stream.scaladsl._
 
-class ChatRoom(roomId: Int, topic: String, actorSystem: ActorSystem) {
+class ChatRoom(val roomId: Int, actorSystem: ActorSystem) {
 
   private[this] val chatRoomActor = actorSystem.actorOf(Props(classOf[ChatRoomActor], roomId))
 
@@ -58,5 +58,5 @@ class ChatRoom(roomId: Int, topic: String, actorSystem: ActorSystem) {
 }
 
 object ChatRoom {
-  def apply(roomId: Int, topic: String)(implicit actorSystem: ActorSystem) = new ChatRoom(roomId, topic, actorSystem)
+  def apply(roomId: Int)(implicit actorSystem: ActorSystem) = new ChatRoom(roomId, actorSystem)
 }

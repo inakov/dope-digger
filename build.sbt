@@ -11,6 +11,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream-experimental" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-core-experimental" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-experimental" % akkaHttpVersion,
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental" % akkaHttpVersion,
     "io.spray" %%  "spray-json" % "1.3.2",
     "org.java-websocket" % "Java-WebSocket" % "1.3.0"
   )
