@@ -128,29 +128,38 @@ var app = ( function () {
 							+ '<div class="row">'
 								+ '<div class="col-md-12">'
 									+ '<h2 class="room-topic"></h2>'
-									// + '<div class="msg-preview"><ul>' + generateChatRoomsTopicsMarkup( data ) + '<ul></div>'
+
 								+ '</div>'
 							+ '</div>'
 							+ '<div class="row">'
-								+ '<div class="col-md-12 msg-container"><ul class="msg-list">'
-									// + generateChatRoomsMsgMarkup( dataMsg )
-								+ '</ul></div>'
+								+ '<div class="col-md-12 msg-container">'
+									+'<ul class="msg-list">'
+									+ '</ul>'
+								+'</div>'
 							+ '</div>'
 
 							+ '<div class="row">'
-								+ '<form role="form" class="col-md-12 ">'
+								+ '<form role="form" class="msg-form col-md-12 ">'
 									+ '<div class="form-group">'
 										+ '<label for="comment"></label>'
-										+ '<textarea class="form-control" rows="5" id="comment"></textarea>'
+										+ '<textarea class="form-control textarea-msg" rows="5" id="comment"></textarea>'
 										+ ' <button type="submit" class="btn btn-default send-msg-btn">Send</button>'
 									+ '</div>'
 								+ '</form>'
 							+ '</div>'
 						+ '</div>'
 
-						 + '<div class="users-right-sidebar container-fluid col-md-3 hidden">'
-						 	+ '<h3 class="active-title">Active users</h3>'
-						 	// + '<ul class="online-users-list">' + generateOnlineUsersList( userData ) + '</ul>'
+						 + '<div class="users-right-sidebar container-fluid col-md-offset-1 col-md-2 hidden">'
+						 	// + '<h3 class="active-title">Some sidebar right? </h3>'
+						 	+ '<ul class="online-users-list">' 
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 	+ '</ul>'
 						 + '</div>';
 
 			return contentMarkup;
@@ -210,7 +219,6 @@ var app = ( function () {
 					$.ajax({
 						method: "GET",
 						url: "http://localhost:8080/rooms",
-						//dataType: "application/json",
 						success: function( roomsData ) {
 							loadProiflePic(roomsData, response.id, response);
 							buildUserProifle(response);
@@ -260,11 +268,15 @@ var app = ( function () {
 					else {
 						var messagetext = JSON.parse(messageFromServer).data.content,
 							messageAuthor = JSON.parse(messageFromServer).data.author.name,
+							authorImgUril = JSON.parse(messageFromServer).data.author.profilePicture,
 							messageSendDate = JSON.parse(messageFromServer).data.date;
 
 						var msgStringMarkup = '<li class="msg-content">'
-							+ '<p>' + messagetext + '</p>'
-							+ '<p>' + 'By: ' + messageAuthor + '</p>'
+							+ '<div class="comment-cont">'
+								+ '<img class="author-img img-circle" src="' + authorImgUril + '" />'
+								+ '<p class="author-comment">' + '<i class="fa fa-share quote"></i>' + messagetext + '</p>'
+							+ '</div>'
+							+ '<p class="msg-date">' + messageAuthor + '</p>'
 							+ '<span class="msg-date">' + moment(messageSendDate).format('DD MMM YYYY HH:mm') + '</span>'
 							+ '</li>';
 
@@ -301,6 +313,7 @@ var app = ( function () {
 
 			$currentRoom.removeClass( 'active-room' );
 			$( '.current-room' ).addClass( 'hidden' );
+			$('.msg-list').html( '' );
 			$( '.users-right-sidebar' ).addClass( 'hidden' );
 			$this.toggleClass( 'hidden' );
 			$joinBtn.toggleClass( 'hidden' );

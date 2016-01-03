@@ -18,7 +18,7 @@ body {
 }
 
 .active-room {
-	color: green;
+	color: #26B756;
 }
 
 /*** App styles ***/
@@ -108,6 +108,10 @@ body {
 	margin-right: 10px;
 }
 
+.quote {
+	margin-right: 5px;
+}
+
 .room-topic {
 	/*background-color: rgba(255,255,255, 0.8);*/
 	color: #403B38;
@@ -119,19 +123,18 @@ body {
 
 /*.current-room {
 	background-image: url(../img/theme.jpg);
+	min-height: 630px;
 	background-repeat: none;
 	background-attachment: scroll;
-	background-position: center center;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	background-size: cover;
 	-o-background-size: cover;
-	text-align: center;
 }*/
 
 .msg-container {
 	/*background-color: rgba(255,255,255, 0.5);*/
-	max-height: 820px;
+	max-height: 600px;
 	overflow-y: scroll;
 }
 
@@ -141,7 +144,7 @@ body {
 }
 
 .form-control:focus {
-	border-color: #fed136;
+	border-color: #ccc;
 }
 
 .chat-room-msg {
@@ -156,6 +159,7 @@ body {
 
 .online-users-list {
 	list-style-type: none;
+	font-size: 79px;
 }
 
 .online-users-list li {
@@ -168,33 +172,57 @@ body {
 }
 
 .users-right-sidebar {
-	background-image: url(../img/portfolio/roundicons-free.png);
-	background-repeat: none;
-	background-attachment: scroll;
-	background-position: center center;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	background-size: cover;
-	-o-background-size: cover;
+	background-color: #403B38;
 	text-align: center;
+	color: #fed136;
 }
 
 .new-room-name-input {
-    width: 75%;
+    width: 72%;
      display: inline-block;
      margin-left: 15px;
  }
 
+.new-room-name > label {
+	padding-left: 20px;
+}
+
+ .send-msg-btn,
+ .send-msg-btn:hover,
+ .send-msg-btn:active,
+ .send-msg-btn:focus {
+ 	width: 100%;
+    background-color: #61B2A7;
+    color: #fff;
+ }
+
+ .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+ 	width: 100%;
+    background-color: #61B2A7;
+    color: #fff;
+ }
+
  .msg-content {
  	padding: 11px;
- 	border: 1px solid #eee;
+ 	border: 1px solid #fed136;
+ 	border-radius: 4px;
  }
 
 .msg-list li {
 	margin-bottom: 10px;
 }
 
+.textarea-msg {
+	margin-bottom: 5px;
+}
+
+.msg-form {
+	padding-left: 54px;
+    padding-right: 35px;
+}
+
  .msg-date {
+ 	margin-bottom: 1px;
  	margin-left: 5px;
  	color: #61B2A7;
  }
@@ -204,4 +232,15 @@ body {
  	color: #26B756;
  	border-bottom: 1px solid;
     padding: 11px;
+ }
+
+ .comment-cont {
+ 	padding: 15px;
+ 	border-bottom: 1px solid #61B2A7;
+ 	margin-bottom: 10px;
+ }
+
+ .author-comment {
+ 	margin-left: 10px;
+ 	display: inline-block;
  }
