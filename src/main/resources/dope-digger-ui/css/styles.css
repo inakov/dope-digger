@@ -178,3 +178,9 @@ body {
 	-o-background-size: cover;
 	text-align: center;
 }
+
+.new-room-name-input {
+    width: 75%;
+     display: inline-block;
+     margin-left: 15px;
+ }

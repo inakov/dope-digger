@@ -1,6 +1,7 @@
 var app = ( function () {
 	var appModule = {},
-		$doc = $( document );
+		$doc = $( document ),
+		ws;
 
 		// fonly for UI visualisation
 		var data = [
@@ -42,39 +43,6 @@ var app = ( function () {
 					  }
 					];
 
-		var dataMsg = [
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  },
-  {
-    "msg": "Fusce commodo facilisis dapibus. Cras libero sem, mattis non purus nec, consequat lobortis enim. Vestibulum at lorem libero. Fusce et pharetra erat. Nulla eleifend ligula sed libero convallis, facilisis aliquam turpis volutpat. Cras ante tellus, lacinia nec consequat nec, dictum sed augue. Vestibulum non feugiat nisis"
-  }
-];
-
 var userData = [
   {
     "name": "Batman Batmanov"
@@ -109,8 +77,10 @@ var userData = [
 		_this.viewUserProfile();
 		_this.joinChatRoom();
 		_this.leaveChatRoom();
+        _this.createNewRoom();
+        _this.sendNewMsg();
 
-	}
+	};
 
 	appModule.logInWithFacebook = function() {
 		// scope helper functions
@@ -129,7 +99,7 @@ var userData = [
 			var markup = '';
 
 			for ( var i = 0; i < arrayOfTopics.length; i++ ) {
-				markup += '<li class="row chat-room-topic">' + '<span class="topic-holder col-md-8 col-xs-8">' + arrayOfTopics[ i ].topic + '</span>'
+				markup += '<li class="row chat-room-topic" data-room-id="' + arrayOfTopics[ i ].id + '">' + '<span class="topic-holder col-md-8 col-xs-8">' + arrayOfTopics[ i ].topic + '</span>'
 							+ '<a class="join-btn col-md-2 col-xs-2">Join</a>'
 							+ '<a class="leave-btn col-md-2 col-xs-2 hidden">Leave</a>'
 							+ '<a class="edit-room-btn col-md-2 col-xs-2"><i class="fa fa-cogs"></i></a>'
@@ -152,7 +122,7 @@ var userData = [
 			return markup;
 		}
 
-		function showApplicationContent() {
+		function showApplicationContent( roomsData ) {
 			var contentMarkup = '';
 
 			contentMarkup += '<div class="container-fluid col-md-3">'
@@ -176,8 +146,9 @@ var userData = [
 							+ '</div>'
 							+ '<div class="row room-topics">'
 								+ '<div class="add-new-room-btn col-md-12 col-xs-12 text-center"><i class="fa fa-users"></i>Create new room</div>'
+                                + '<div class="new-room-name hidden"><label for="room-name">New room:</label><input type="text" class="form-control new-room-name-input" id="room-name"></div>'
 								+ '<ul class="col-md-12 topics-list">'
-									+ generateChatRoomsTopicsMarkup( data )
+									+ generateChatRoomsTopicsMarkup( roomsData )
 								+ '</ul>'
 							+ '</div>'
 						+ '</div>'
@@ -191,7 +162,7 @@ var userData = [
 							+ '</div>'
 							+ '<div class="row">'
 								+ '<div class="col-md-12 msg-container"><ul class="msg-list">'
-									+ generateChatRoomsMsgMarkup( dataMsg )
+									// + generateChatRoomsMsgMarkup( dataMsg )
 								+ '</ul></div>'
 							+ '</div>'
 
@@ -200,34 +171,57 @@ var userData = [
 									+ '<div class="form-group">'
 										+ '<label for="comment"></label>'
 										+ '<textarea class="form-control" rows="5" id="comment"></textarea>'
+										+ ' <button type="submit" class="btn btn-default send-msg-btn">Send</button>'
 									+ '</div>'
 								+ '</form>'
 							+ '</div>'
 						+ '</div>'
 
-						// + '<div class="users-right-sidebar container-fluid col-md-3 hidden">'
-						// 	+ '<h3 class="active-title">Active users</h3>'
-						// 	// + '<ul class="online-users-list">' + generateOnlineUsersList( userData ) + '</ul>'
-						// + '</div>';
+						 + '<div class="users-right-sidebar container-fluid col-md-3 hidden">'
+						 	+ '<h3 class="active-title">Active users</h3>'
+						 	// + '<ul class="online-users-list">' + generateOnlineUsersList( userData ) + '</ul>'
+						 + '</div>';
 
 			return contentMarkup;
 		}
 
 		$doc.on( 'click', '.btn-fb-login', function( e ) {
 			var $this = $( this ),
-				appContentMarkup = showApplicationContent();
+				appContentMarkup = '';
+
+			$.ajax({
+				method: "GET",
+				url: "http://localhost:8080/rooms",
+				//dataType: "application/json",
+				success: function( roomsData ) {
+					console.log( roomsData );
+                    appContentMarkup = showApplicationContent( roomsData );
+                    $( 'body' ).html( appContentMarkup );
+				},
+				error: function ( error ){
+					console.log( error );
+				}
+			});
 			// TODO: request to facebook api for log in and authentication
-			$( 'body' ).html( appContentMarkup );
 
 		});
-	}
+	};
 
 	appModule.joinChatRoom = function () {
 		$doc.on( 'click','.join-btn', function ( e ) {
 			var $this = $( this ),
 				$currentRoom = $this.closest( '.chat-room-topic' ),
 				$leaveBtn = $this.next( '.leave-btn' ),
+				roomId = $this.parent().data( 'room-id' ),
 				currentRoomTitle = $currentRoom.find( '.topic-holder' ).text();
+
+			ws = $.websocket( 'ws://localhost:8080/ws-chat/'+ roomId +'?name=1', {
+       				 events: {
+                		message: function( e ) { 
+                			$( '.msg-list' ).append( '<li>' + e.data + '</li>' ); 
+                		}
+        			}
+        		}); 
 
 			$( '.current-room' ).removeClass( 'hidden' );
 			$( '.users-right-sidebar' ).removeClass( 'hidden' );
@@ -246,7 +240,7 @@ var userData = [
 			}
 
 		});
-	}
+	};
 
 	appModule.leaveChatRoom = function () {
 		$doc.on( 'click', '.leave-btn', function ( e ) {
@@ -258,15 +252,78 @@ var userData = [
 			$this.toggleClass( 'hidden' );
 			$joinBtn.toggleClass( 'hidden' );
 		});
-	}
+	};
 
 	appModule.viewUserProfile = function () {
 		$doc.on( 'click', '.view-user-profile', function ( e ) {
 			console.log( 'batman' );
 		});
+	};
+
+	appModule.sendNewMsg = function () {
+		$doc.on( 'click', '.send-msg-btn', function ( e ) {
+			e.preventDefault();
+
+			ws.send( 'message', $( '#comment' ).val() );
+
+			console.log( 'send' );
+		});
 	}
 
+    appModule.createNewRoom = function() {
+        var counterId = 4;
+
+        function singleRoomMarkup ( id, roomName ) {
+            var markup = '';
+
+            markup += '<li class="row chat-room-topic" data-room-id="' + id + '">' + '<span class="topic-holder col-md-8 col-xs-8">' + roomName + '</span>'
+                + '<a class="join-btn col-md-2 col-xs-2">Join</a>'
+                + '<a class="leave-btn col-md-2 col-xs-2 hidden">Leave</a>'
+                + '<a class="edit-room-btn col-md-2 col-xs-2"><i class="fa fa-cogs"></i></a>'
+                + '</li>';
+
+            return markup;
+        }
+
+        $doc.on( 'click', '.add-new-room-btn', function( e ) {
+            $( '.new-room-name').removeClass( 'hidden' );
+            $( '.new-room-name-input' ).val( '' );
+      });
+
+        $doc.on( 'blur', '.new-room-name-input', function ( e ) {
+           var $this = $( this),
+               newRoomName = $this.val(),
+               newRoomObject = {};
+
+            newRoomObject = {
+                id: counterId += 1,
+                topic: newRoomName
+            };
+
+            $( '.new-room-name').addClass( 'hidden' );
+            console.log(newRoomObject);
+
+            if ( newRoomObject.topic !== '' ) {
+	            $.ajax({
+	                method: "POST",
+	                url: "http://localhost:8080/room",
+	                contentType: "application/json",
+	                data: JSON.stringify( newRoomObject ),
+	                success: function( success ) {
+	                    var addedNewRoomMarkup = singleRoomMarkup(newRoomObject.id, newRoomObject.topic );
+
+	                    $( '.topics-list').prepend( addedNewRoomMarkup );
+	                },
+	                error: function ( error ){
+	                    console.log( error );
+	                }
+	            });
+	        }
+        });
+
+    };
+
 	return appModule;
-})( app || {} )
+})( app || {} );
 
 app.init();
