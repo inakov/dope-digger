@@ -215,13 +215,12 @@ var userData = [
 				roomId = $this.parent().data( 'room-id' ),
 				currentRoomTitle = $currentRoom.find( '.topic-holder' ).text();
 
-			ws = $.websocket( 'ws://localhost:8080/ws-chat/'+ roomId +'?name=1', {
-       				 events: {
-                		message: function( e ) { 
-                			$( '.msg-list' ).append( '<li>' + e.data + '</li>' ); 
-                		}
-        			}
-        		}); 
+			ws = $.gracefulWebSocket('ws://localhost:8080/ws-chat/'+ roomId +'?name=1');
+			ws.onmessage = function (event) {
+				console.log(event.data)
+				var messageFromServer = event.data;
+				$( '.msg-list' ).append( '<li>' + messageFromServer + '</li>' );
+			};
 
 			$( '.current-room' ).removeClass( 'hidden' );
 			$( '.users-right-sidebar' ).removeClass( 'hidden' );
@@ -251,6 +250,7 @@ var userData = [
 			$currentRoom.removeClass( 'active-room' );
 			$this.toggleClass( 'hidden' );
 			$joinBtn.toggleClass( 'hidden' );
+			ws.close();
 		});
 	};
 
@@ -263,8 +263,8 @@ var userData = [
 	appModule.sendNewMsg = function () {
 		$doc.on( 'click', '.send-msg-btn', function ( e ) {
 			e.preventDefault();
-
-			ws.send( 'message', $( '#comment' ).val() );
+			var msg = $( '#comment' ).val()
+			ws.send(msg);
 
 			console.log( 'send' );
 		});
