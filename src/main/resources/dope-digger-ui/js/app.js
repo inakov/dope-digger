@@ -217,9 +217,29 @@ var userData = [
 
 			ws = $.gracefulWebSocket('ws://localhost:8080/ws-chat/'+ roomId +'?name=1');
 			ws.onmessage = function (event) {
-				console.log(event.data)
-				var messageFromServer = event.data;
-				$( '.msg-list' ).append( '<li>' + messageFromServer + '</li>' );
+				var messageFromServer = event.data,
+					jsonMessageFromServer = JSON.parse( messageFromServer );
+					
+				if ( JSON.parse( messageFromServer ).type == 'system' ) {
+					var systemActionText = jsonMessageFromServer.data.action,
+						systemUser = jsonMessageFromServer.data.user.name;
+
+					$( '.msg-list' ).append( '<li class="system-information-msg">' + systemUser + ' ' + systemActionText + '</li>' );
+				}
+				else {
+					var messagetext = JSON.parse( messageFromServer ).data.content,
+						messageAuthor = JSON.parse( messageFromServer ).data.author.name,
+						messageSendDate = JSON.parse( messageFromServer ).data.date;
+
+					var msgStringMarkup = '<li class="msg-content">'
+											+ '<p>' + messagetext + '</p>'
+											+ '<p>' + 'By: ' + messageAuthor + '</p>'
+											+ '<span class="msg-date">' + moment( messageSendDate ).format('DD MMM YYYY HH:mm') + '</span>'
+										+ '</li>';
+
+					$( '.msg-list' ).append( msgStringMarkup );
+				}
+				
 			};
 
 			$( '.current-room' ).removeClass( 'hidden' );
@@ -248,8 +268,12 @@ var userData = [
 				$joinBtn = $this.prev( '.join-btn' );
 
 			$currentRoom.removeClass( 'active-room' );
+			$( '.current-room' ).addClass( 'hidden' );
+			$( '.users-right-sidebar' ).addClass( 'hidden' );
 			$this.toggleClass( 'hidden' );
 			$joinBtn.toggleClass( 'hidden' );
+
+			// close web socket
 			ws.close();
 		});
 	};
@@ -263,10 +287,11 @@ var userData = [
 	appModule.sendNewMsg = function () {
 		$doc.on( 'click', '.send-msg-btn', function ( e ) {
 			e.preventDefault();
-			var msg = $( '#comment' ).val()
+
+			var msg = $( '#comment' ).val();
 			ws.send(msg);
 
-			console.log( 'send' );
+			$( '#comment' ).val( '' );
 		});
 	}
 

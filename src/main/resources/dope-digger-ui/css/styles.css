@@ -184,3 +184,24 @@ body {
      display: inline-block;
      margin-left: 15px;
  }
+
+ .msg-content {
+ 	padding: 11px;
+ 	border: 1px solid #eee;
+ }
+
+.msg-list li {
+	margin-bottom: 10px;
+}
+
+ .msg-date {
+ 	margin-left: 5px;
+ 	color: #61B2A7;
+ }
+
+ .system-information-msg {
+ 	text-transform: uppercase;
+ 	color: #26B756;
+ 	border-bottom: 1px solid;
+    padding: 11px;
+ }
