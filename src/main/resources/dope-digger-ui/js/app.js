@@ -1,7 +1,8 @@
 var app = ( function () {
 	var appModule = {},
 		$doc = $( document ),
-		ws;
+		ws,
+		currentUserId;
 
 	appModule.init = function() {
 		var _this = this;
@@ -171,19 +172,48 @@ var app = ( function () {
 				);
 			}
 
+			function buildUserProifle(userData){
+				FB.api(
+					"/"+ userData.id + "/picture",
+					function (response) {
+						if (response && !response.error) {
+							var newUserProfile = {
+								id: userData.id,
+								name: userData.name,
+								profilePicture: response.data.url
+							};
+
+							$.ajax({
+								method: "POST",
+								url: "http://localhost:8080/user",
+								contentType: "application/json",
+								data: JSON.stringify( newUserProfile ),
+								success: function( userProfile ) {
+									console.log( userProfile );
+								},
+								error: function ( error ){
+									console.log( error );
+								}
+							});
+
+						}
+					}
+				);
+			}
+
 			// Here we run a very simple test of the Graph API after login is
 			// successful.  See statusChangeCallback() for when this call is made.
 			function getUserData() {
-				console.log('Welcome!  Fetching your information.... ');
 				FB.api('/me', function(response) {
-					console.log('Successful login for: ' + JSON.stringify( response ));
+					currentUserId = response.id;
+
 					$.ajax({
 						method: "GET",
 						url: "http://localhost:8080/rooms",
 						//dataType: "application/json",
 						success: function( roomsData ) {
-							console.log( roomsData );
-							loadProiflePic(roomsData, response.id, response)
+							loadProiflePic(roomsData, response.id, response);
+							buildUserProifle(response);
 						},
 						error: function ( error ){
 							console.log( error );
@@ -209,53 +239,55 @@ var app = ( function () {
 
 	appModule.joinChatRoom = function () {
 		$doc.on( 'click','.join-btn', function ( e ) {
-			var $this = $( this ),
-				$currentRoom = $this.closest( '.chat-room-topic' ),
-				$leaveBtn = $this.next( '.leave-btn' ),
-				roomId = $this.parent().data( 'room-id' ),
-				currentRoomTitle = $currentRoom.find( '.topic-holder' ).text();
+			if (typeof currentUserId !== 'undefined') {
+				var $this = $(this),
+					$currentRoom = $this.closest('.chat-room-topic'),
+					$leaveBtn = $this.next('.leave-btn'),
+					roomId = $this.parent().data('room-id'),
+					currentRoomTitle = $currentRoom.find('.topic-holder').text();
 
-			ws = $.gracefulWebSocket('ws://localhost:8080/ws-chat/'+ roomId +'?name=1');
-			ws.onmessage = function (event) {
-				var messageFromServer = event.data,
-					jsonMessageFromServer = JSON.parse( messageFromServer );
-					
-				if ( JSON.parse( messageFromServer ).type == 'system' ) {
-					var systemActionText = jsonMessageFromServer.data.action,
-						systemUser = jsonMessageFromServer.data.user.name;
+				ws = $.gracefulWebSocket('ws://localhost:8080/ws-chat/' + roomId + '?name=' + currentUserId);
+				ws.onmessage = function (event) {
+					var messageFromServer = event.data,
+						jsonMessageFromServer = JSON.parse(messageFromServer);
 
-					$( '.msg-list' ).append( '<li class="system-information-msg">' + systemUser + ' ' + systemActionText + '</li>' );
+					if (JSON.parse(messageFromServer).type == 'system') {
+						var systemActionText = jsonMessageFromServer.data.action,
+							systemUser = jsonMessageFromServer.data.user.name;
+
+						$('.msg-list').append('<li class="system-information-msg">' + systemUser + ' ' + systemActionText + '</li>');
+					}
+					else {
+						var messagetext = JSON.parse(messageFromServer).data.content,
+							messageAuthor = JSON.parse(messageFromServer).data.author.name,
+							messageSendDate = JSON.parse(messageFromServer).data.date;
+
+						var msgStringMarkup = '<li class="msg-content">'
+							+ '<p>' + messagetext + '</p>'
+							+ '<p>' + 'By: ' + messageAuthor + '</p>'
+							+ '<span class="msg-date">' + moment(messageSendDate).format('DD MMM YYYY HH:mm') + '</span>'
+							+ '</li>';
+
+						$('.msg-list').append(msgStringMarkup);
+					}
+
+				};
+
+				$('.current-room').removeClass('hidden');
+				$('.users-right-sidebar').removeClass('hidden');
+				$('.room-topic').text(currentRoomTitle);
+
+				if ($currentRoom.hasClass('active-room')) {
+					$('.chat-room-topic').removeClass('active-room');
+					$this.toggleClass('hidden');
+					$leaveBtn.toggleClass('hidden');
 				}
 				else {
-					var messagetext = JSON.parse( messageFromServer ).data.content,
-						messageAuthor = JSON.parse( messageFromServer ).data.author.name,
-						messageSendDate = JSON.parse( messageFromServer ).data.date;
-
-					var msgStringMarkup = '<li class="msg-content">'
-											+ '<p>' + messagetext + '</p>'
-											+ '<p>' + 'By: ' + messageAuthor + '</p>'
-											+ '<span class="msg-date">' + moment( messageSendDate ).format('DD MMM YYYY HH:mm') + '</span>'
-										+ '</li>';
-
-					$( '.msg-list' ).append( msgStringMarkup );
+					$('.chat-room-topic').removeClass('active-room');
+					$currentRoom.toggleClass('active-room');
+					$leaveBtn.toggleClass('hidden');
+					$this.toggleClass('hidden');
 				}
-				
-			};
-
-			$( '.current-room' ).removeClass( 'hidden' );
-			$( '.users-right-sidebar' ).removeClass( 'hidden' );
-			$( '.room-topic' ).text( currentRoomTitle );
-
-			if ( $currentRoom.hasClass( 'active-room' ) ) {
-				$( '.chat-room-topic' ).removeClass( 'active-room' );
-				$this.toggleClass( 'hidden' );
-				$leaveBtn.toggleClass( 'hidden' );
-			}
-			else {
-				$( '.chat-room-topic' ).removeClass( 'active-room' );
-				$currentRoom.toggleClass( 'active-room' );
-				$leaveBtn.toggleClass( 'hidden' );
-				$this.toggleClass( 'hidden' );
 			}
 
 		});
