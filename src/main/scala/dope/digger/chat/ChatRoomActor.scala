@@ -12,19 +12,19 @@ class ChatRoomActor(roomId: Int) extends Actor {
   override def receive: Receive = {
     case UserJoined(name, actorRef) =>
       participants += name -> actorRef
-      val event = "{\"type\":'system', \"data\":" + ChatActivityMessage("JOINED", UserDao.find(name)).toJson.toString+"}"
+      val event = "{\"type\":\"system\", \"data\":" + ChatActivityMessage("JOINED", UserDao.find(name)).toJson.toString+"}"
       broadcast(SystemMessage(event))
       println(s"User $name joined channel[$roomId]")
 
     case UserLeft(name) =>
       println(s"User $name left channel[$roomId]")
-      val event = "{\"type\":'system', \"data\":" + ChatActivityMessage("LEFT", UserDao.find(name)).toJson.toString+"}"
+      val event = "{\"type\":\"system\", \"data\":" + ChatActivityMessage("LEFT", UserDao.find(name)).toJson.toString+"}"
       broadcast(SystemMessage(event))
       participants -= name
 
     case msg: IncomingMessage =>
       val content = DopeMessage(msg.message, UserDao.find(msg.sender)).toJson.toString
-      val event = "{\"type\":'message', \"data\":"+ content +"}"
+      val event = "{\"type\":\"message\", \"data\":"+ content +"}"
       broadcast(ChatMessage(msg.sender, text = event))
 
   }
