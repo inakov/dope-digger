@@ -10,11 +10,21 @@ object RoomDao {
     rooms.values.toList
   }
 
+  def getRoom(roomId: Int): Room = {
+    rooms.get(roomId).get
+  }
+
   def createRoom(topic: String): Room = {
     val room = Room(rooms.size+1, topic)
     rooms += room.id -> room
 
     room
+  }
+
+  def updateRoom(roomId: Int, topic: String): Room ={
+    val updatedRoom = Room(roomId, topic)
+    rooms += roomId -> updatedRoom
+    updatedRoom
   }
 
   private def predefRooms = Map(

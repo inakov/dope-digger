@@ -10,7 +10,7 @@ var app = ( function () {
 
 		window.fbAsyncInit = function() {
 			FB.init({
-				appId      : '1084358888283500',
+				appId      : '1085295068189882', //1084358888283500
 				cookie     : true,  // enable cookies to allow the server to access
 									// the session
 				xfbml      : true,  // parse social plugins on this page
@@ -254,7 +254,11 @@ var app = ( function () {
 					roomId = $this.parent().data('room-id'),
 					currentRoomTitle = $currentRoom.find('.topic-holder').text();
 
-				ws = $.gracefulWebSocket('wss://' + location.host + '/ws-chat/' + roomId + '?name=' + currentUserId);
+				var protocol = 'ws://';
+				if (location.protocol == "https:"){
+					protocol = 'wss://'
+				}
+				ws = $.gracefulWebSocket(protocol + location.host + '/ws-chat/' + roomId + '?name=' + currentUserId);
 				ws.onmessage = function (event) {
 					var messageFromServer = event.data,
 						jsonMessageFromServer = JSON.parse(messageFromServer);

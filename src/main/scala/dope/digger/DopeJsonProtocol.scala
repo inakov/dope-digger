@@ -14,6 +14,7 @@ object DopeJsonProtocol extends DefaultJsonProtocol {
   implicit val roomFormat = jsonFormat2(Room)
   implicit val createRoomFormat = jsonFormat1(CreateRoom)
   implicit val updateRoomFormat = jsonFormat2(UpdateRoom)
+  implicit val roomStatusFormat = jsonFormat3(RoomStatus)
 
   implicit object DateJsonFormat extends RootJsonFormat[DateTime] {
 

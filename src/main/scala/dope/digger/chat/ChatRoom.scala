@@ -5,6 +5,11 @@ import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.FlowGraph.Implicits._
 import akka.stream.scaladsl._
+import akka.util.Timeout
+import dope.digger.user.{UserDao, User}
+import akka.pattern.ask
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class ChatRoom(val roomId: Int, actorSystem: ActorSystem) {
 
@@ -54,6 +59,14 @@ class ChatRoom(val roomId: Int, actorSystem: ActorSystem) {
     }
 
   def sendMessage(message: ChatMessage): Unit = chatRoomActor ! message
+
+  def onlineUsers: Future[List[User]] = {
+    import actorSystem.dispatcher
+    implicit val timeout = Timeout(5 seconds)
+
+    val onlineUserIds = (chatRoomActor ? GetOnlineUsers).mapTo[List[String]]
+    onlineUserIds.map(_.map(userId => UserDao.find(userId)))
+  }
 
 }
 

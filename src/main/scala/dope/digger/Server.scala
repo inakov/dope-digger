@@ -14,6 +14,7 @@ object Server extends App {
 
   implicit val actorSystem = ActorSystem("akka-system")
   implicit val flowMaterializer = ActorMaterializer()
+  import actorSystem.dispatcher
 
   val config = actorSystem.settings.config
 

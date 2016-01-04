@@ -14,4 +14,6 @@ package object chat {
 
   case class DopeMessage(content: String, author: User, date: DateTime = DateTime.now)
   case class ChatActivityMessage(action: String, user: User)
+
+  case class RoomStatus(id: Int, topic: String, onlineUsers: List[User] = List.empty[User])
 }

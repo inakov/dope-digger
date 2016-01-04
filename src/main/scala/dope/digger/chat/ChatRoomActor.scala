@@ -5,6 +5,7 @@ import dope.digger.user.UserDao
 import spray.json._
 import dope.digger.DopeJsonProtocol._
 
+case object GetOnlineUsers
 class ChatRoomActor(roomId: Int) extends Actor {
 
   var participants: Map[String, ActorRef] = Map.empty[String, ActorRef]
@@ -26,6 +27,9 @@ class ChatRoomActor(roomId: Int) extends Actor {
       val content = DopeMessage(msg.message, UserDao.find(msg.sender)).toJson.toString
       val event = "{\"type\":\"message\", \"data\":"+ content +"}"
       broadcast(ChatMessage(msg.sender, text = event))
+
+    case GetOnlineUsers =>
+      sender ! participants.keys.toList
 
   }
 
