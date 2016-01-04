@@ -1,8 +1,12 @@
+enablePlugins(JavaAppPackaging)
+
 name := "dope-digger"
 
 version := "1.0"
 
 scalaVersion := "2.11.7"
+
+scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 libraryDependencies ++= {
   val akkaHttpVersion = "1.0-RC4"
@@ -16,3 +20,5 @@ libraryDependencies ++= {
     "org.java-websocket" % "Java-WebSocket" % "1.3.0"
   )
 }
+
+Revolver.settings
