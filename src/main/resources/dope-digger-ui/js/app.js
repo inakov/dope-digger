@@ -254,7 +254,7 @@ var app = ( function () {
 					roomId = $this.parent().data('room-id'),
 					currentRoomTitle = $currentRoom.find('.topic-holder').text();
 
-				ws = $.gracefulWebSocket('ws://' + location.host + '/ws-chat/' + roomId + '?name=' + currentUserId);
+				ws = $.gracefulWebSocket('wss://' + location.host + '/ws-chat/' + roomId + '?name=' + currentUserId);
 				ws.onmessage = function (event) {
 					var messageFromServer = event.data,
 						jsonMessageFromServer = JSON.parse(messageFromServer);
