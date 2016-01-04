@@ -194,7 +194,7 @@ var app = ( function () {
 
 							$.ajax({
 								method: "POST",
-								url: "http://localhost:8080/user",
+								url: "user",
 								contentType: "application/json",
 								data: JSON.stringify( newUserProfile ),
 								success: function( userProfile ) {
@@ -218,7 +218,7 @@ var app = ( function () {
 
 					$.ajax({
 						method: "GET",
-						url: "http://localhost:8080/rooms",
+						url: "rooms",
 						success: function( roomsData ) {
 							loadProiflePic(roomsData, response.id, response);
 							buildUserProifle(response);
@@ -254,7 +254,7 @@ var app = ( function () {
 					roomId = $this.parent().data('room-id'),
 					currentRoomTitle = $currentRoom.find('.topic-holder').text();
 
-				ws = $.gracefulWebSocket('ws://localhost:8080/ws-chat/' + roomId + '?name=' + currentUserId);
+				ws = $.gracefulWebSocket('ws://' + location.host + '/ws-chat/' + roomId + '?name=' + currentUserId);
 				ws.onmessage = function (event) {
 					var messageFromServer = event.data,
 						jsonMessageFromServer = JSON.parse(messageFromServer);
@@ -376,7 +376,7 @@ var app = ( function () {
             if ( newRoomObject.topic !== '' ) {
 	            $.ajax({
 	                method: "POST",
-	                url: "http://localhost:8080/room",
+	                url: "room",
 	                contentType: "application/json",
 	                data: JSON.stringify( newRoomObject ),
 	                success: function( success ) {

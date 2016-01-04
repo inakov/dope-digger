@@ -23,11 +23,5 @@ object Server extends App {
   val route = MainService.route ~ EchoService.route ~ ChatService.route ~ RoomService.route ~ UserService.route
 
   val binding = Http().bindAndHandle(route, interface, port)
-  println(s"Server is now online at http://$interface:$port\nPress RETURN to stop...")
-
-  StdIn.readLine()
-
-  import actorSystem.dispatcher
-  binding.flatMap(_.unbind()).onComplete(_ => actorSystem.shutdown())
-  println("Server is down...")
+  println(s"Server is now online at http://$interface:$port\n")
 }
