@@ -163,8 +163,8 @@ body {
 }
 
 .online-users-list li {
-	/*border-bottom: 1px solid;*/
-	padding: 10px 20px;
+	border-bottom: 1px solid;
+	/*padding: 10px 20px;*/
 }
 
 .online-user-name {
@@ -244,3 +244,12 @@ body {
  	margin-left: 10px;
  	display: inline-block;
  }
+
+ .current-online-user {
+ 	margin-left: 10px;
+ 	font-size: 18px;
+ }
+
+.current-user-pic {
+	margin-left: -70px;
+}

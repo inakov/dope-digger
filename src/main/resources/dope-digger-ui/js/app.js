@@ -10,7 +10,7 @@ var app = ( function () {
 
 		window.fbAsyncInit = function() {
 			FB.init({
-				appId      : '1085295068189882', //1084358888283500
+				appId      : 1084358888283500,
 				cookie     : true,  // enable cookies to allow the server to access
 									// the session
 				xfbml      : true,  // parse social plugins on this page
@@ -151,14 +151,14 @@ var app = ( function () {
 
 						 + '<div class="users-right-sidebar container-fluid col-md-offset-1 col-md-2 hidden">'
 						 	// + '<h3 class="active-title">Some sidebar right? </h3>'
-						 	+ '<ul class="online-users-list">' 
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
-						 		+ '<li><i class="fa fa-smile-o"></i></li>'
+						 	+ '<ul class="online-users-list">'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
+						 		// + '<li><i class="fa fa-smile-o"></i></li>'
 						 	+ '</ul>'
 						 + '</div>';
 
@@ -268,6 +268,18 @@ var app = ( function () {
 							systemUser = jsonMessageFromServer.data.user.name;
 
 						$('.msg-list').append('<li class="system-information-msg">' + systemUser + ' ' + systemActionText + '</li>');
+
+						if ( JSON.parse(messageFromServer).data.action == 'LEFT' ) {
+							var $liToRemove = $( '.online-users-list' ).find( "[data-user-id='" + currentUserId + "']" );
+
+							$( '.online-users-list' ).remove( $liToRemove );
+						}
+
+						if ( JSON.parse(messageFromServer).data.action == 'JOINED' ) {
+							var $liToAdd = $( '<li data-user-id="'+ currentUserId +'"><img class="img-circle current-user-pic" src="' + JSON.parse(messageFromServer).data.user.profilePicture + '"/>' + '<span class="current-online-user">' + JSON.parse(messageFromServer).data.user.name + '</span></li>' );
+
+							$( '.online-users-list' ).append( $liToAdd );
+						}
 					}
 					else {
 						var messagetext = JSON.parse(messageFromServer).data.content,
@@ -286,8 +298,22 @@ var app = ( function () {
 
 						$('.msg-list').append(msgStringMarkup);
 					}
-
 				};
+
+				$.ajax({
+					method: "GET",
+					url: "room/" + roomId,
+					contentType: "application/json",
+					success: function( data ) {
+						for  ( var i = 0; i < data.length; i++ ) {
+							$( '.online-users-list' ).append( '<li data-user-id="' + data[ i ].id +'">' + data[ i ].profilePicture + data[ i ].name );
+						};
+
+					},
+					error: function ( error ){
+						console.log( error );
+					}
+				});
 
 				$('.current-room').removeClass('hidden');
 				$('.users-right-sidebar').removeClass('hidden');
