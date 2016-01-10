@@ -270,13 +270,13 @@ var app = ( function () {
 						$('.msg-list').append('<li class="system-information-msg">' + systemUser + ' ' + systemActionText + '</li>');
 
 						if ( JSON.parse(messageFromServer).data.action == 'LEFT' ) {
-							var $liToRemove = $( '.online-users-list' ).find( "[data-user-id='" + currentUserId + "']" );
+							var $liToRemove = $( '.online-users-list' ).find( "[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']" );
 
 							$( '.online-users-list' ).remove( $liToRemove );
 						}
 
 						if ( JSON.parse(messageFromServer).data.action == 'JOINED' ) {
-							var $liToAdd = $( '<li data-user-id="'+ currentUserId +'"><img class="img-circle current-user-pic" src="' + JSON.parse(messageFromServer).data.user.profilePicture + '"/>' + '<span class="current-online-user">' + JSON.parse(messageFromServer).data.user.name + '</span></li>' );
+							var $liToAdd = $( '<li data-user-id="'+ JSON.parse(messageFromServer).data.user.id +'"><img class="img-circle current-user-pic" src="' + JSON.parse(messageFromServer).data.user.profilePicture + '"/>' + '<span class="current-online-user">' + JSON.parse(messageFromServer).data.user.name + '</span></li>' );
 
 							$( '.online-users-list' ).append( $liToAdd );
 						}
