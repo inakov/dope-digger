@@ -272,7 +272,7 @@ var app = ( function () {
 						if ( JSON.parse(messageFromServer).data.action == 'LEFT' ) {
 							var $liToRemove = $( '.online-users-list' ).find( "[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']" );
 
-							$( '.online-users-list' ).remove( $liToRemove );
+							$( '.online-users-list' ).closest("[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']").remove();
 						}
 
 						if ( JSON.parse(messageFromServer).data.action == 'JOINED' ) {
