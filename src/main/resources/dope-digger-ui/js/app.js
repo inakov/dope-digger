@@ -272,7 +272,7 @@ var app = ( function () {
 						if ( JSON.parse(messageFromServer).data.action == 'LEFT' ) {
 							var $liToRemove = $( '.online-users-list' ).find( "[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']" );
 
-							$( '.online-users-list' ).closest("[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']").remove();
+							$( '.online-users-list' ).find("[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']").remove();
 						}
 
 						if ( JSON.parse(messageFromServer).data.action == 'JOINED' ) {
@@ -305,6 +305,7 @@ var app = ( function () {
 					url: "room/" + roomId,
 					contentType: "application/json",
 					success: function( data ) {
+						console.log( data );
 						for  ( var i = 0; i < data.length; i++ ) {
 							$( '.online-users-list' ).append( '<li data-user-id="' + data[ i ].id +'">' + data[ i ].profilePicture + data[ i ].name );
 						};
