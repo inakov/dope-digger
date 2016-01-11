@@ -310,6 +310,7 @@ var app = ( function () {
 						var onlineUsers = roomData.onlineUsers;
 
 						for  ( var i = 0; i < onlineUsers.length; i++ ) {
+							$( '.online-users-list' ).find("[data-user-id='" + onlineUsers[ i ].id + "']").remove();
 							var $liToAdd = $( '<li data-user-id="'+ onlineUsers[ i ].id +'"><img class="img-circle current-user-pic" src="' + onlineUsers[ i ].profilePicture + '"/>' + '<span class="current-online-user">' + onlineUsers[ i ].name + '</span></li>' );
 							$( '.online-users-list' ).append( $liToAdd );
 						};
