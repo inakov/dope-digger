@@ -276,6 +276,7 @@ var app = ( function () {
 						}
 
 						if ( JSON.parse(messageFromServer).data.action == 'JOINED' ) {
+							$( '.online-users-list' ).find("[data-user-id='" + JSON.parse(messageFromServer).data.user.id + "']").remove();
 							var $liToAdd = $( '<li data-user-id="'+ JSON.parse(messageFromServer).data.user.id +'"><img class="img-circle current-user-pic" src="' + JSON.parse(messageFromServer).data.user.profilePicture + '"/>' + '<span class="current-online-user">' + JSON.parse(messageFromServer).data.user.name + '</span></li>' );
 
 							$( '.online-users-list' ).append( $liToAdd );
