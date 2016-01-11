@@ -304,10 +304,13 @@ var app = ( function () {
 					method: "GET",
 					url: "room/" + roomId,
 					contentType: "application/json",
-					success: function( data ) {
-						console.log( data );
-						for  ( var i = 0; i < data.length; i++ ) {
-							$( '.online-users-list' ).append( '<li data-user-id="' + data[ i ].id +'">' + data[ i ].profilePicture + data[ i ].name );
+					success: function( roomData ) {
+						console.log( roomData );
+						var onlineUsers = roomData.onlineUsers;
+
+						for  ( var i = 0; i < onlineUsers.length; i++ ) {
+							var $liToAdd = $( '<li data-user-id="'+ onlineUsers[ i ].id +'"><img class="img-circle current-user-pic" src="' + onlineUsers[ i ].profilePicture + '"/>' + '<span class="current-online-user">' + onlineUsers[ i ].name + '</span></li>' );
+							$( '.online-users-list' ).append( $liToAdd );
 						};
 
 					},
@@ -351,6 +354,7 @@ var app = ( function () {
 
 			// close web socket
 			ws.close();
+			$( '.online-users-list' ).empty()
 		});
 	};
 
